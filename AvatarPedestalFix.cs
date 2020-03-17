@@ -33,7 +33,7 @@ namespace AvatarPedestalFix
 
         void OnLevelWasLoaded(int level)
         {
-            if (level == ((Application.platform == RuntimePlatform.WindowsPlayer) ? 1 : 2) && !initialized)
+            if (!initialized && level == ((Application.platform == RuntimePlatform.WindowsPlayer) ? 1 : 2))
                 initialized = true;
         }
 
