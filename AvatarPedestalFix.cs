@@ -13,16 +13,16 @@ namespace AvatarPedestalFix
         public const string Name = "AvatarPedestalFix";
         public const string Author = "Herp Derpinstine";
         public const string Company = "NanoNuke @ nanonuke.net";
-        public const string Version = "1.0.1";
+        public const string Version = "1.0.2";
     }
     [VRCModInfo(ModInfo.Name, ModInfo.Version, ModInfo.Author)]
 
     public class AvatarPedestalFix : VRCMod
     {
-        private FieldInfo instance = null;
-        private HarmonyInstance harmonyInstance = null;
-        private bool initialized = false;
-        private ApiWorld currentRoom = null;
+        private static FieldInfo instance = null;
+        private static HarmonyInstance harmonyInstance = null;
+        private static bool initialized = false;
+        private static ApiWorld currentRoom = null;
 
         void OnApplicationStart()
         {
@@ -37,7 +37,7 @@ namespace AvatarPedestalFix
                 initialized = true;
         }
 
-        public void OnUpdate()
+        void OnUpdate()
         {
             if (initialized)
             {
@@ -47,7 +47,6 @@ namespace AvatarPedestalFix
                     {
                         currentRoom = RoomManager.currentRoom;
                         VRC_AvatarPedestal[] pedestalsInWorld = Resources.FindObjectsOfTypeAll<VRC_AvatarPedestal>();
-                        VRCModLogger.Log("[AvatarPedestalFix] Found " + pedestalsInWorld.Length + " VRC_AvatarPedestal in current world");
                         foreach (VRC_AvatarPedestal p in pedestalsInWorld)
                             if (!string.IsNullOrEmpty(p.blueprintId))
                                 foreach (VRC_Trigger trigger in p.GetComponents<VRC_Trigger>())
@@ -61,7 +60,7 @@ namespace AvatarPedestalFix
 
         private static bool TriggerEvent(VRC_EventHandler __0, VRC_EventHandler.VrcEvent __1, VRC_EventHandler.VrcBroadcastType __2, int __3, float __4)
         {
-            if (!string.IsNullOrEmpty(__1.ParameterString) && __1.ParameterString.Equals("SetAvatarUse") && (__2 != VRC_EventHandler.VrcBroadcastType.Local))
+            if ((__2 != VRC_EventHandler.VrcBroadcastType.Local) && !string.IsNullOrEmpty(__1.ParameterString) && __1.ParameterString.Equals("SetAvatarUse"))
                 return false;
             return true;
         }
